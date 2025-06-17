@@ -1,0 +1,257 @@
+from zipfile import ZipFile
+from pathlib import Path
+
+# Modified HTML content
+html_content = """
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>عرض عطر التاج</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Cairo', sans-serif;
+      background-color: white;
+      color: #333;
+      text-align: center;
+      overflow-x: hidden;
+    }
+
+    .top-bar {
+      background-color: #d4a019;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      overflow: hidden;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+
+    .scrolling-text {
+      display: inline-block;
+      white-space: nowrap;
+      padding-left: 100%;
+      animation: scroll-text 30s linear infinite;
+    }
+
+    @keyframes scroll-text {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+
+    hr.separator {
+      border: none;
+      border-top: 2px dashed #d4a019;
+      margin: 10px auto;
+      width: 90%;
+    }
+
+    .logo {
+      width: 200px;
+      margin: 15px auto;
+      animation: fadeIn 1.2s ease-in-out;
+    }
+
+    .agency {
+      color: #b78b00;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .title {
+      font-size: 22px;
+      color: #b78b00;
+      margin-top: 10px;
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    .product-container {
+      position: relative;
+      margin: 20px auto;
+      width: 260px;
+    }
+
+    .product-img {
+      width: 100%;
+      border-radius: 20px;
+      animation: fadeIn 2.5s ease-in-out;
+    }
+
+    .discount-circle {
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      background-color: red;
+      color: white;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: bold;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      animation: pulse 1.2s infinite;
+      flex-direction: column;
+    }
+
+    .countdown-header {
+      width: 90%;
+      max-width: 320px;
+      margin: 20px auto 0;
+      border-top-right-radius: 20px;
+      border-top-left-radius: 20px;
+      background-color: #e60000;
+      color: white;
+      font-weight: bold;
+      font-size: 18px;
+      padding: 10px;
+      animation: slideOutTop 1.5s ease-in-out;
+    }
+
+    .countdown-box {
+      background-color: #f5e8d2;
+      border-radius: 0 0 20px 20px;
+      padding: 20px;
+      width: 90%;
+      max-width: 320px;
+      margin: 0 auto 20px;
+      display: flex;
+      justify-content: space-around;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .countdown-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-weight: bold;
+      font-size: 18px;
+      color: #d61e1e;
+    }
+
+    .countdown-item span {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideOutTop {
+      0% { transform: translateY(-30px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    .whatsapp-float {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #25d366;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      animation: heartbeat 1.8s infinite ease-in-out;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+    }
+
+    .whatsapp-float img {
+      width: 30px;
+      height: 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <div class="scrolling-text">
+      🚚 التوصيل مجانًا لجميع المحافظات 🚚 التوصيل مجانًا لجميع المحافظات 🚚 التوصيل مجانًا لجميع المحافظات
+    </div>
+  </div>
+
+  <hr class="separator" />
+
+  <img src="small-heaven-logo.png" alt="شعار" class="logo" />
+  <div class="agency">الوكيل الرسمي في العراق</div>
+  <div class="title">عرض خاص ولفترة محدودة على عطر التاج من شركة HEAVENSCENTS</div>
+
+  <div class="product-container">
+    <div class="discount-circle">خصم<br>60%</div>
+    <img src="image-1-1-630x630.png" alt="صورة المنتج" class="product-img" />
+  </div>
+
+  <div class="countdown-header">باقي على انتهاء العرض</div>
+
+  <div class="countdown-box">
+    <div class="countdown-item"><span id="hours">0</span>ساعة</div>
+    <div class="countdown-item"><span id="minutes">0</span>دقيقة</div>
+    <div class="countdown-item"><span id="seconds">0</span>ثانية</div>
+  </div>
+
+  <a href="https://wa.me/9647759779411" class="whatsapp-float" target="_blank">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="واتساب">
+  </a>
+
+  <script>
+    function updateCountdown() {
+      const now = new Date();
+      const midnight = new Date();
+      midnight.setHours(24, 0, 0, 0);
+      const diff = midnight - now;
+
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      document.getElementById("hours").textContent = hours;
+      document.getElementById("minutes").textContent = minutes;
+      document.getElementById("seconds").textContent = seconds;
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+  </script>
+
+</body>
+</html>
+"""
+
+# Save the updated project files
+project_dir = Path("/mnt/data/offer_project")
+project_dir.mkdir(parents=True, exist_ok=True)
+html_path = project_dir / "index.html"
+html_path.write_text(html_content, encoding="utf-8")
+
+# Create updated zip file
+zip_path = "/mnt/data/offer_project.zip"
+with ZipFile(zip_path, "w") as zipf:
+    zipf.write(html_path, arcname="index.html")
+
+zip_path
